@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coloring - Grade R Learning</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/activities.css">
+    <style>
+        .coloring-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .canvas-wrapper {
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        #coloringCanvas {
+            border: 3px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: crosshair;
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            touch-action: none;
+        }
+        
+        .color-palette {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(60px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .color-btn {
+            width: 60px;
+            height: 60px;
+            border: 4px solid transparent;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .color-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .color-btn.active {
+            border-color: #2d3748;
+            transform: scale(1.15);
+        }
+        
+        .tools {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .tool-btn {
+            padding: 12px 24px;
+            font-size: 18px;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tool-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .brush-size-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 12px 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .brush-size-control input {
+            width: 150px;
+        }
+        
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">
+                <span>🎨</span>
+                <span>Coloring Activity</span>
+            </div>
+            <div class="navbar-menu">
+                <a href="../student-dashboard.html" class="navbar-link">🏠 Back to Dashboard</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="coloring-container">
+        <h1 style="text-align: center; margin-bottom: 30px;">🎨 Color Your Picture!</h1>
+        
+        <!-- Color Palette -->
+        <div class="card">
+            <h3>Choose Your Colors:</h3>
+            <div class="color-palette" id="colorPalette">
+                <!-- Colors will be added by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Tools -->
+        <div class="card">
+            <h3>Tools:</h3>
+            <div class="tools">
+                <button class="tool-btn" style="background: #4299e1; color: white;" onclick="selectTool('brush')">
+                    🖌️ Brush
+                </button>
+                <button class="tool-btn" style="background: #48bb78; color: white;" onclick="selectTool('fill')">
+                    🪣 Fill
+                </button>
+                <button class="tool-btn" style="background: #f6ad55; color: white;" onclick="selectTool('eraser')">
+                    🧹 Eraser
+                </button>
+                
+                <div class="brush-size-control">
+                    <span>Brush Size:</span>
+                    <input type="range" id="brushSize" min="5" max="50" value="15" oninput="updateBrushSize(this.value)">
+                    <span id="brushSizeValue">15</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Canvas -->
+        <div class="canvas-wrapper">
+            <canvas id="coloringCanvas" width="800" height="600"></canvas>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn btn-lg" style="background: #f6ad55; color: white;" onclick="clearCanvas()">
+                🗑️ Clear All
+            </button>
+            <button class="btn btn-lg" style="background: #9f7aea; color: white;" onclick="saveProgress()">
+                💾 Save Progress
+            </button>
+            <button class="btn btn-lg btn-success" onclick="submitColoring()">
+                ✅ Submit to Teacher
+            </button>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-storage-compat.js"></script>
+    
+    <!-- Firebase Config -->
+    <script src="../firebase-config.js"></script>
+    
+    <!-- Scripts -->
+    <script src="../js/utils.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/auth-guard.js"></script>
+    <script src="../js/activities/coloring.js"></script>
+</body>
+</html>
+
