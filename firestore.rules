@@ -1,0 +1,184 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    function getUserData() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function isStudent() {
+      return isSignedIn() && getUserData().role == 'student';
+    }
+    
+    function isParent() {
+      return isSignedIn() && getUserData().role == 'parent';
+    }
+    
+    function isTeacher() {
+      return isSignedIn() && getUserData().role == 'teacher';
+    }
+    
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+    
+    function isParentOfStudent(studentId) {
+      return isParent() && studentId in getUserData().childrenIds;
+    }
+    
+    function isTeacherOfStudent(studentId) {
+      let studentData = get(/databases/$(database)/documents/users/$(studentId)).data;
+      return isTeacher() && studentData.classId in getUserData().classIds;
+    }
+    
+    // Users collection
+    match /users/{userId} {
+      // Users can read their own document
+      allow read: if isOwner(userId);
+      
+      // Parents can read their children's documents
+      allow read: if isParentOfStudent(userId);
+      
+      // Teachers can read their students' documents
+      allow read: if isTeacherOfStudent(userId);
+      
+      // Users can update their own profile (but not role)
+      allow update: if isOwner(userId) 
+        && request.resource.data.role == resource.data.role
+        && request.resource.data.uid == resource.data.uid;
+      
+      // Only teachers can create new users (students)
+      allow create: if isTeacher();
+    }
+    
+    // Classes collection
+    match /classes/{classId} {
+      // Teachers can read their own classes
+      allow read: if isTeacher() && classId in getUserData().classIds;
+      
+      // Students can read their own class
+      allow read: if isStudent() && getUserData().classId == classId;
+      
+      // Teachers can create and update their own classes
+      allow create, update: if isTeacher() 
+        && request.resource.data.teacherId == request.auth.uid;
+      
+      // Teachers can delete their own classes
+      allow delete: if isTeacher() && resource.data.teacherId == request.auth.uid;
+    }
+    
+    // Activities collection
+    match /activities/{activityId} {
+      // Everyone can read active activities
+      allow read: if isSignedIn() && resource.data.isActive == true;
+      
+      // Teachers can read all activities
+      allow read: if isTeacher();
+      
+      // Teachers can create, update, and delete activities
+      allow create: if isTeacher();
+      allow update, delete: if isTeacher() 
+        && resource.data.createdBy == request.auth.uid;
+    }
+    
+    // Assignments collection
+    match /assignments/{assignmentId} {
+      // Students can read their own assignments
+      allow read: if isStudent() && resource.data.assignedTo == request.auth.uid;
+      
+      // Students can read class assignments
+      allow read: if isStudent() 
+        && resource.data.assignedTo == 'class:' + getUserData().classId;
+      
+      // Parents can read their children's assignments
+      allow read: if isParent() 
+        && resource.data.assignedTo in getUserData().childrenIds;
+      
+      // Teachers can read assignments they created
+      allow read: if isTeacher() && resource.data.assignedBy == request.auth.uid;
+      
+      // Teachers can create and update assignments
+      allow create, update: if isTeacher();
+      
+      // Teachers can delete their own assignments
+      allow delete: if isTeacher() && resource.data.assignedBy == request.auth.uid;
+    }
+    
+    // Student Progress collection
+    match /studentProgress/{progressId} {
+      // Students can read and update their own progress
+      allow read: if isStudent() && resource.data.studentId == request.auth.uid;
+      allow create, update: if isStudent() 
+        && request.resource.data.studentId == request.auth.uid;
+      
+      // Parents can read their children's progress
+      allow read: if isParentOfStudent(resource.data.studentId);
+      
+      // Teachers can read progress of their students
+      allow read: if isTeacherOfStudent(resource.data.studentId);
+    }
+    
+    // Submissions collection
+    match /submissions/{submissionId} {
+      // Students can read their own submissions
+      allow read: if isStudent() && resource.data.studentId == request.auth.uid;
+      
+      // Students can create submissions (before grading)
+      allow create: if isStudent() 
+        && request.resource.data.studentId == request.auth.uid
+        && request.resource.data.isGraded == false;
+      
+      // Students cannot update after submission
+      allow update: if false;
+      
+      // Parents can read their children's submissions
+      allow read: if isParentOfStudent(resource.data.studentId);
+      
+      // Teachers can read and update (grade) submissions of their students
+      allow read: if isTeacherOfStudent(resource.data.studentId);
+      allow update: if isTeacher() 
+        && isTeacherOfStudent(resource.data.studentId)
+        && request.resource.data.gradedBy == request.auth.uid;
+    }
+    
+    // Grades collection
+    match /grades/{gradeId} {
+      // Students can read their own published grades
+      allow read: if isStudent() 
+        && resource.data.studentId == request.auth.uid
+        && resource.data.isPublished == true;
+      
+      // Parents can read their children's published grades
+      allow read: if isParentOfStudent(resource.data.studentId)
+        && resource.data.isPublished == true;
+      
+      // Teachers can read and write grades for their students
+      allow read: if isTeacherOfStudent(resource.data.studentId);
+      allow create, update: if isTeacher() 
+        && isTeacherOfStudent(request.resource.data.studentId)
+        && request.resource.data.teacherId == request.auth.uid;
+      
+      // Teachers can delete their own grades
+      allow delete: if isTeacher() && resource.data.teacherId == request.auth.uid;
+    }
+    
+    // Notifications collection
+    match /notifications/{notificationId} {
+      // Users can read their own notifications
+      allow read: if isOwner(resource.data.userId);
+      
+      // Users can update their own notifications (mark as read)
+      allow update: if isOwner(resource.data.userId)
+        && request.resource.data.userId == resource.data.userId;
+      
+      // System/Teachers can create notifications
+      allow create: if isTeacher();
+    }
+  }
+}
+
