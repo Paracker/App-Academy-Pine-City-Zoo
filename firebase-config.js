@@ -3,12 +3,13 @@
 // Get these from: Firebase Console > Project Settings > General > Your apps > Web app
 
 const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  storageBucket: "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-  appId: "YOUR_APP_ID"
+  apiKey: "AIzaSyDFoe8WG-6i9oXMFIxAE9cbhb2BO48pUys",
+  authDomain: "grade-r-learning.firebaseapp.com",
+  projectId: "grade-r-learning",
+  storageBucket: "grade-r-learning.firebasestorage.app",
+  messagingSenderId: "469418568683",
+  appId: "1:469418568683:web:e611079c688949a5b887ae",
+  measurementId: "G-CEF2WW17HL"
 };
 
 // Initialize Firebase
@@ -37,4 +38,3 @@ auth.onAuthStateChanged((user) => {
     console.log('User signed out');
   }
 });
-
