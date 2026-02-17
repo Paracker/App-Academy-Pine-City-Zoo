@@ -190,8 +190,16 @@ export default function DashboardPage() {
                   <div className="text-xl font-bold text-primary-600">
                     R{order.total.toFixed(2)}
                   </div>
-                  <div className="text-sm text-gray-600 mt-2">
-                    {order.items.length} item(s)
+                  <div className="flex justify-between items-center mt-4">
+                    <div className="text-sm text-gray-600">
+                      {order.items.length} item(s)
+                    </div>
+                    <Link
+                      href={`/orders/${order.id}`}
+                      className="text-primary-600 hover:text-primary-700 font-semibold text-sm"
+                    >
+                      Track Order →
+                    </Link>
                   </div>
                 </div>
               ))}
@@ -240,4 +248,3 @@ export default function DashboardPage() {
     </div>
   );
 }
-

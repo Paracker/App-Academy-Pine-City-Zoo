@@ -110,21 +110,21 @@ export default function AdminDashboard() {
         <div className="bg-white rounded-xl shadow-md p-8">
           <h2 className="text-2xl font-bold mb-6">Quick Actions</h2>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <button className="p-6 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:shadow-lg transition text-left">
+            <Link href="/admin/products" className="p-6 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:shadow-lg transition text-left block">
               <Package className="w-8 h-8 text-primary-600 mb-3" />
-              <h3 className="font-bold text-lg mb-2">Add Product</h3>
-              <p className="text-gray-600 text-sm">Add new products to your catalog</p>
-            </button>
+              <h3 className="font-bold text-lg mb-2">Manage Products</h3>
+              <p className="text-gray-600 text-sm">Add, edit, and manage product inventory</p>
+            </Link>
             <button className="p-6 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:shadow-lg transition text-left">
               <Wrench className="w-8 h-8 text-primary-600 mb-3" />
               <h3 className="font-bold text-lg mb-2">Manage Services</h3>
               <p className="text-gray-600 text-sm">Update service offerings and pricing</p>
             </button>
-            <button className="p-6 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:shadow-lg transition text-left">
+            <Link href="/admin/orders" className="p-6 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:shadow-lg transition text-left block">
               <ShoppingBag className="w-8 h-8 text-primary-600 mb-3" />
-              <h3 className="font-bold text-lg mb-2">View Orders</h3>
-              <p className="text-gray-600 text-sm">Manage customer orders and shipments</p>
-            </button>
+              <h3 className="font-bold text-lg mb-2">Manage Orders</h3>
+              <p className="text-gray-600 text-sm">View and update customer orders</p>
+            </Link>
             <button className="p-6 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:shadow-lg transition text-left">
               <Users className="w-8 h-8 text-primary-600 mb-3" />
               <h3 className="font-bold text-lg mb-2">View Bookings</h3>
@@ -158,4 +158,3 @@ export default function AdminDashboard() {
     </div>
   );
 }
-
