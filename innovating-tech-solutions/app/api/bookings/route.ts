@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendEmail, emailTemplates } from '@/lib/email';
 
 export async function POST(request: Request) {
   try {
@@ -40,6 +41,20 @@ export async function POST(request: Request) {
         },
       },
     });
+
+    // Send booking confirmation email
+    if (booking.user.email) {
+      const emailContent = emailTemplates.bookingConfirmation(
+        booking.service.name,
+        booking.scheduledDate,
+        booking.location || 'N/A',
+        booking.totalPrice
+      );
+      await sendEmail({
+        to: booking.user.email,
+        ...emailContent,
+      });
+    }
 
     return NextResponse.json(booking, { status: 201 });
   } catch (error) {
@@ -84,4 +99,3 @@ export async function GET(request: Request) {
     );
   }
 }
-

@@ -131,13 +131,20 @@ innovating-tech-solutions/
 - [x] Protected routes for authenticated users
 - [x] Payment success page
 
-### Phase 4 (Future)
-- [ ] Email notifications (order confirmations, booking reminders)
-- [ ] Customer reviews and ratings
-- [ ] Advanced inventory tracking
-- [ ] Technician dispatch system
+### Phase 4 (In Progress)
+- [x] Email notifications infrastructure (Nodemailer)
+- [x] Order confirmation emails
+- [x] Booking confirmation emails
+- [x] Order status update emails
+- [x] Booking reminder emails
+- [x] Low stock alert emails
+- [x] Customer reviews and ratings API
+- [x] Advanced inventory tracking (stock history)
+- [x] Automatic stock updates on orders
 - [ ] Admin product/service management UI
-- [ ] Order status tracking
+- [ ] Order status tracking UI
+- [ ] Review display on product pages
+- [ ] Technician dispatch system
 - [ ] Push notifications
 
 ## Development

@@ -21,6 +21,7 @@ model User {
 
   orders    Order[]
   bookings  Booking[]
+  reviews   Review[]
 }
 
 enum UserRole {
@@ -47,6 +48,7 @@ model Product {
   description String?
   price       Float
   stock       Int      @default(0)
+  lowStockThreshold Int @default(10)
   images      String[]
   categoryId  String
   createdAt   DateTime @default(now())
@@ -54,6 +56,8 @@ model Product {
 
   category    Category    @relation(fields: [categoryId], references: [id])
   orderItems  OrderItem[]
+  reviews     Review[]
+  stockHistory StockHistory[]
 }
 
 model Service {
@@ -113,10 +117,12 @@ model Order {
 
   user            User          @relation(fields: [userId], references: [id])
   items           OrderItem[]
+  statusHistory   OrderStatusHistory[]
 }
 
 enum OrderStatus {
   PENDING
+  CONFIRMED
   PROCESSING
   SHIPPED
   DELIVERED
@@ -147,3 +153,58 @@ model OrderItem {
   product   Product  @relation(fields: [productId], references: [id])
 }
 
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  rating    Int      // 1-5 stars
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId]) // One review per user per product
+}
+
+model StockHistory {
+  id          String   @id @default(cuid())
+  productId   String
+  quantity    Int      // Positive for additions, negative for reductions
+  reason      String   // e.g., "Order", "Restock", "Adjustment"
+  reference   String?  // Order ID or other reference
+  createdAt   DateTime @default(now())
+
+  product     Product  @relation(fields: [productId], references: [id])
+}
+
+model OrderStatusHistory {
+  id        String      @id @default(cuid())
+  orderId   String
+  status    OrderStatus
+  notes     String?
+  createdAt DateTime    @default(now())
+
+  order     Order       @relation(fields: [orderId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+}
+
+enum NotificationType {
+  ORDER_CONFIRMATION
+  ORDER_STATUS_UPDATE
+  BOOKING_CONFIRMATION
+  BOOKING_REMINDER
+  LOW_STOCK_ALERT
+  REVIEW_REQUEST
+}

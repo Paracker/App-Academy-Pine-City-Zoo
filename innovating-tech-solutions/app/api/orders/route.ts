@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendEmail, emailTemplates } from '@/lib/email';
 
 function generateOrderNumber(): string {
   const timestamp = Date.now().toString(36);
@@ -40,6 +41,12 @@ export async function POST(request: Request) {
             price: item.price,
           })),
         },
+        statusHistory: {
+          create: {
+            status: 'PENDING',
+            notes: 'Order created',
+          },
+        },
       },
       include: {
         items: {
@@ -56,6 +63,61 @@ export async function POST(request: Request) {
         },
       },
     });
+
+    // Update stock and create stock history for each item
+    for (const item of items) {
+      await prisma.product.update({
+        where: { id: item.id },
+        data: {
+          stock: {
+            decrement: item.quantity,
+          },
+        },
+      });
+
+      await prisma.stockHistory.create({
+        data: {
+          productId: item.id,
+          quantity: -item.quantity,
+          reason: 'Order',
+          reference: order.id,
+        },
+      });
+
+      // Check for low stock
+      const product = await prisma.product.findUnique({
+        where: { id: item.id },
+      });
+
+      if (product && product.stock <= product.lowStockThreshold) {
+        // Send low stock alert (to admin email)
+        const adminEmail = process.env.ADMIN_EMAIL || process.env.SMTP_USER;
+        if (adminEmail) {
+          const emailContent = emailTemplates.lowStockAlert(
+            product.name,
+            product.stock,
+            product.lowStockThreshold
+          );
+          await sendEmail({
+            to: adminEmail,
+            ...emailContent,
+          });
+        }
+      }
+    }
+
+    // Send order confirmation email
+    if (order.user.email) {
+      const emailContent = emailTemplates.orderConfirmation(
+        order.orderNumber,
+        order.total,
+        order.items
+      );
+      await sendEmail({
+        to: order.user.email,
+        ...emailContent,
+      });
+    }
 
     return NextResponse.json(order, { status: 201 });
   } catch (error) {
@@ -104,4 +166,3 @@ export async function GET(request: Request) {
     );
   }
 }
-
