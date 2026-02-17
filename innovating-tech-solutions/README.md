@@ -45,12 +45,29 @@ A modern e-commerce platform for tech repair services and accessories in Alberto
 npm install
 ```
 
-2. Run the development server:
+2. Set up environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your database and API credentials
+```
+
+3. Set up the database:
+```bash
+# Run Prisma migrations
+npx prisma migrate dev --name init
+
+# Generate Prisma client
+npx prisma generate
+```
+
+4. Run the development server:
 ```bash
 npm run dev
 ```
 
-3. Open [http://localhost:3000](http://localhost:3000) in your browser
+5. Open [http://localhost:3000](http://localhost:3000) in your browser
+
+6. Access the admin dashboard at [http://localhost:3000/admin](http://localhost:3000/admin)
 
 ## Project Structure
 
@@ -68,26 +85,28 @@ innovating-tech-solutions/
 
 ## Roadmap
 
-### Phase 1 (Current)
+### Phase 1 ✅
 - [x] Project setup
 - [x] Homepage with services showcase
 - [x] Responsive design
+
+### Phase 2 ✅
+- [x] Database integration (PostgreSQL + Prisma)
+- [x] Product catalog with API
+- [x] Shopping cart functionality
+- [x] Service booking system API
+- [x] Order management API
+- [x] Payment method selection (Stripe + Cash on Delivery)
+- [x] Admin dashboard basics
+
+### Phase 3 (Next)
+- [ ] User authentication (NextAuth.js)
+- [ ] Stripe payment integration
 - [ ] Service detail pages
-- [ ] Product catalog
-- [ ] Shopping cart
-
-### Phase 2
-- [ ] Database integration (PostgreSQL + Prisma)
-- [ ] User authentication
-- [ ] Booking system
-- [ ] Payment integration (Stripe)
-- [ ] Admin dashboard
-
-### Phase 3
-- [ ] Order management
-- [ ] Inventory tracking
+- [ ] Booking calendar UI
 - [ ] Email notifications
 - [ ] Customer reviews
+- [ ] Inventory tracking
 - [ ] Technician dispatch system
 
 ## Development
@@ -114,4 +133,3 @@ This project is optimized for deployment on Vercel:
 ## License
 
 Private - Innovating Tech Solutions © 2024
-
