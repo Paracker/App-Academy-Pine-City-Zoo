@@ -17,37 +17,37 @@ export default function Home() {
       icon: <Smartphone className="w-12 h-12" />,
       title: "Cellphone Repairs",
       description: "Screen replacements, battery changes, and all phone repairs",
-      link: "/services/phone-repair"
+      link: "/services/book"
     },
     {
       icon: <Monitor className="w-12 h-12" />,
       title: "Computer Maintenance",
       description: "Hardware upgrades, software fixes, and system optimization",
-      link: "/services/computer-maintenance"
+      link: "/services/book"
     },
     {
       icon: <Camera className="w-12 h-12" />,
       title: "CCTV Installation",
       description: "Professional security camera installation and setup",
-      link: "/services/cctv-installation"
+      link: "/services/book"
     },
     {
       icon: <Wrench className="w-12 h-12" />,
       title: "Call-Out Repairs",
       description: "We come to you! On-site repairs anywhere in Alberton",
-      link: "/services/call-out"
+      link: "/services/book"
     },
     {
       icon: <Globe className="w-12 h-12" />,
       title: "Website Development",
       description: "Custom websites built for your business needs",
-      link: "/services/web-development"
+      link: "/services/book"
     },
     {
       icon: <Shield className="w-12 h-12" />,
       title: "Website Security",
       description: "Protect your online presence with our security services",
-      link: "/services/web-security"
+      link: "/services/book"
     }
   ];
 
@@ -65,12 +65,16 @@ export default function Home() {
               </p>
             </div>
             <nav className="hidden md:flex gap-6 items-center">
-              <Link href="/services" className="hover:text-primary-200 transition">Services</Link>
+              <Link href="/#services" className="hover:text-primary-200 transition">Services</Link>
               <Link href="/shop" className="hover:text-primary-200 transition">Shop</Link>
-              <Link href="/contact" className="hover:text-primary-200 transition">Contact</Link>
+              <Link href="/services/book" className="hover:text-primary-200 transition">Book Service</Link>
               <Link href="/cart" className="bg-white text-primary-600 px-4 py-2 rounded-lg hover:bg-primary-50 transition flex items-center gap-2">
                 <ShoppingCart className="w-5 h-5" />
                 Cart
+              </Link>
+              <Link href="/auth/signin" className="hover:text-primary-200 transition">Sign In</Link>
+              <Link href="/auth/signup" className="bg-white text-primary-600 px-4 py-2 rounded-lg hover:bg-primary-50 transition font-semibold">
+                Sign Up
               </Link>
             </nav>
           </div>
@@ -89,11 +93,11 @@ export default function Home() {
           </p>
           <div className="flex gap-4 justify-center flex-wrap">
             <Link 
-              href="/services/call-out" 
+              href="/services/book" 
               className="bg-primary-600 text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-primary-700 transition flex items-center gap-2"
             >
               <Phone className="w-5 h-5" />
-              Book Call-Out Service
+              Book a Service
             </Link>
             <Link 
               href="/shop" 
@@ -208,4 +212,3 @@ export default function Home() {
     </div>
   );
 }
-

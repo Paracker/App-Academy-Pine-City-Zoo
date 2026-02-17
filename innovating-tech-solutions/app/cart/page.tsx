@@ -24,7 +24,8 @@ export default function CartPage() {
       // In production, this would come from authentication
       const userId = 'demo-user-id';
 
-      const response = await fetch('/api/orders', {
+      // Create order first
+      const orderResponse = await fetch('/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -41,13 +42,44 @@ export default function CartPage() {
         }),
       });
 
-      if (response.ok) {
-        const order = await response.json();
-        clearCart();
-        alert(`Order ${order.orderNumber} placed successfully! Total: R${grandTotal.toFixed(2)}`);
-        router.push('/');
+      if (!orderResponse.ok) {
+        alert('Failed to create order. Please try again.');
+        setLoading(false);
+        return;
+      }
+
+      const order = await orderResponse.json();
+
+      // If payment method is card, redirect to Stripe
+      if (paymentMethod === 'CARD') {
+        const checkoutResponse = await fetch('/api/checkout', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            items: items.map(item => ({
+              name: item.name,
+              price: item.price,
+              quantity: item.quantity,
+            })),
+            orderId: order.id,
+            userId,
+          }),
+        });
+
+        if (checkoutResponse.ok) {
+          const { url } = await checkoutResponse.json();
+          // Redirect to Stripe checkout
+          window.location.href = url;
+        } else {
+          alert('Failed to initialize payment. Please try again.');
+        }
       } else {
-        alert('Failed to place order. Please try again.');
+        // Cash on delivery - just confirm
+        clearCart();
+        alert(`Order ${order.orderNumber} placed successfully! Total: R${grandTotal.toFixed(2)}\n\nPayment method: Cash on Delivery`);
+        router.push('/');
       }
     } catch (error) {
       console.error('Error placing order:', error);
@@ -188,4 +220,3 @@ export default function CartPage() {
     </div>
   );
 }
-

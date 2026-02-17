@@ -4,7 +4,32 @@ A modern e-commerce platform for tech repair services and accessories in Alberto
 
 ## Features
 
-### Services
+### Core Features
+- 🏠 **Professional Homepage** - Showcasing all services and products
+- 📱 **Responsive Design** - Works perfectly on all devices
+- 🎨 **Modern UI** - Clean, professional design with Tailwind CSS
+
+### E-Commerce
+- 🛒 **Shopping Cart** - Add products, adjust quantities, persistent storage
+- 💳 **Multiple Payment Methods** - Stripe card payments & Cash on Delivery
+- 📦 **Product Catalog** - Browse and purchase tech accessories
+- ✅ **Order Management** - Track orders with unique order numbers
+
+### Service Booking
+- 📅 **Service Booking System** - Schedule appointments with date/time picker
+- 🚗 **Call-Out Services** - Book on-site repairs at your location
+- 🛠️ **Multiple Services** - Cellphone repairs, computer maintenance, CCTV, web services
+
+### User Management
+- 🔐 **User Authentication** - Secure sign up/sign in with NextAuth.js
+- 👤 **User Dashboard** - View order history and service bookings
+- 🔒 **Protected Routes** - Secure access to user-specific pages
+
+### Admin Features
+- 📊 **Admin Dashboard** - Overview of products, services, orders, and bookings
+- 🎛️ **API Management** - RESTful APIs for all operations
+
+### Services Offered
 - 📱 Cellphone Repairs (screen replacements, battery changes, etc.)
 - 💻 Computer Maintenance (hardware upgrades, software fixes)
 - 📹 CCTV Camera Installation
@@ -12,15 +37,11 @@ A modern e-commerce platform for tech repair services and accessories in Alberto
 - 🌐 Website Development
 - 🔒 Website Security Services
 
-### Products
+### Products Available
 - LCD Screens
 - Charging Cables & Pins
 - Screen Protectors
 - Phone Cases & Accessories
-
-### Payment Options
-- 💳 Online Card Payments (Stripe)
-- 💵 Cash on Delivery
 
 ## Tech Stack
 
@@ -28,9 +49,11 @@ A modern e-commerce platform for tech repair services and accessories in Alberto
 - **Language:** TypeScript
 - **Styling:** Tailwind CSS
 - **Icons:** Lucide React
-- **Database:** PostgreSQL (to be added)
-- **ORM:** Prisma (to be added)
-- **Payments:** Stripe (to be integrated)
+- **Database:** PostgreSQL
+- **ORM:** Prisma
+- **Authentication:** NextAuth.js
+- **Payments:** Stripe
+- **State Management:** React Context API
 
 ## Getting Started
 
@@ -99,15 +122,23 @@ innovating-tech-solutions/
 - [x] Payment method selection (Stripe + Cash on Delivery)
 - [x] Admin dashboard basics
 
-### Phase 3 (Next)
-- [ ] User authentication (NextAuth.js)
-- [ ] Stripe payment integration
-- [ ] Service detail pages
-- [ ] Booking calendar UI
-- [ ] Email notifications
-- [ ] Customer reviews
-- [ ] Inventory tracking
+### Phase 3 ✅
+- [x] User authentication (NextAuth.js with email/password)
+- [x] Sign up and sign in pages
+- [x] User dashboard (view orders & bookings)
+- [x] Stripe payment integration (checkout & webhooks)
+- [x] Service booking UI with date/time picker
+- [x] Protected routes for authenticated users
+- [x] Payment success page
+
+### Phase 4 (Future)
+- [ ] Email notifications (order confirmations, booking reminders)
+- [ ] Customer reviews and ratings
+- [ ] Advanced inventory tracking
 - [ ] Technician dispatch system
+- [ ] Admin product/service management UI
+- [ ] Order status tracking
+- [ ] Push notifications
 
 ## Development
 
