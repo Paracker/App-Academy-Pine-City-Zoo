@@ -8,6 +8,11 @@ async function main() {
 
   // Clear existing data
   console.log('🧹 Cleaning existing data...');
+  // Note: Technician tables will be available after migration
+  // await prisma.bookingStatusHistory.deleteMany();
+  // await prisma.technicianAvailability.deleteMany();
+  // await prisma.technicianSkill.deleteMany();
+  // await prisma.technician.deleteMany();
   await prisma.orderStatusHistory.deleteMany();
   await prisma.stockHistory.deleteMany();
   await prisma.review.deleteMany();
@@ -29,6 +34,7 @@ async function main() {
       email: 'admin@innovatingtech.co.za',
       name: 'Admin User',
       password: hashedPassword,
+      role: 'ADMIN',
     },
   });
 
@@ -272,9 +278,10 @@ async function main() {
       name: 'Cellphone Screen Repair',
       slug: 'cellphone-screen-repair',
       description: 'Professional screen replacement for all phone models. We use original quality parts. Same-day service available.',
-      price: 599.99,
+      basePrice: 599.99,
       duration: 60,
-      available: true,
+      callOut: false,
+      active: true,
     },
   });
 
@@ -283,9 +290,10 @@ async function main() {
       name: 'Cellphone Battery Replacement',
       slug: 'cellphone-battery-replacement',
       description: 'Replace your old battery with a new high-capacity one. Extends phone life significantly.',
-      price: 399.99,
+      basePrice: 399.99,
       duration: 45,
-      available: true,
+      callOut: false,
+      active: true,
     },
   });
 
@@ -294,9 +302,10 @@ async function main() {
       name: 'Computer Maintenance & Cleaning',
       slug: 'computer-maintenance-cleaning',
       description: 'Complete computer maintenance service. Includes cleaning, virus removal, software updates, and optimization.',
-      price: 499.99,
+      basePrice: 499.99,
       duration: 120,
-      available: true,
+      callOut: false,
+      active: true,
     },
   });
 
@@ -305,9 +314,10 @@ async function main() {
       name: 'CCTV Camera Installation',
       slug: 'cctv-camera-installation',
       description: 'Professional CCTV camera installation. Includes mounting, wiring, and system configuration. We install up to 8 cameras.',
-      price: 2499.99,
+      basePrice: 2499.99,
       duration: 240,
-      available: true,
+      callOut: true,
+      active: true,
     },
   });
 
@@ -316,9 +326,10 @@ async function main() {
       name: 'Website Development',
       slug: 'website-development',
       description: 'Custom website development for your business. Responsive design, SEO optimized, and mobile-friendly.',
-      price: 4999.99,
+      basePrice: 4999.99,
       duration: 480,
-      available: true,
+      callOut: false,
+      active: true,
     },
   });
 
@@ -327,9 +338,10 @@ async function main() {
       name: 'Website Security & Maintenance',
       slug: 'website-security-maintenance',
       description: 'Monthly website security monitoring and maintenance. Includes SSL, backups, updates, and security scans.',
-      price: 799.99,
+      basePrice: 799.99,
       duration: 60,
-      available: true,
+      callOut: false,
+      active: true,
     },
   });
 
@@ -338,9 +350,10 @@ async function main() {
       name: 'Mobile Repair Call-Out Service',
       slug: 'mobile-repair-call-out-service',
       description: 'We come to you! On-site phone and computer repair service. Available anywhere in your area.',
-      price: 299.99,
+      basePrice: 299.99,
       duration: 90,
-      available: true,
+      callOut: true,
+      active: true,
     },
   });
 
@@ -354,7 +367,7 @@ async function main() {
       userId: customer1.id,
       orderNumber: 'ORD-2024-001',
       status: 'DELIVERED',
-      paymentMethod: 'CREDIT_CARD',
+      paymentMethod: 'CARD',
       paymentStatus: 'PAID',
       subtotal: 519.98,
       tax: 77.99,
@@ -423,8 +436,8 @@ async function main() {
       userId: customer2.id,
       orderNumber: 'ORD-2024-002',
       status: 'PROCESSING',
-      paymentMethod: 'EFT',
-      paymentStatus: 'PAID',
+      paymentMethod: 'CASH_ON_DELIVERY',
+      paymentStatus: 'PENDING',
       subtotal: 1749.98,
       tax: 262.49,
       total: 2012.47,
@@ -608,4 +621,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-
