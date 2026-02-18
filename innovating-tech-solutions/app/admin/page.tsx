@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { Package, Wrench, ShoppingBag, Users, ArrowLeft } from 'lucide-react';
+import { Package, Wrench, ShoppingBag, Users, ArrowLeft, UserCog } from 'lucide-react';
 
 interface Stats {
   products: number;
@@ -130,6 +130,11 @@ export default function AdminDashboard() {
               <h3 className="font-bold text-lg mb-2">View Bookings</h3>
               <p className="text-gray-600 text-sm">Manage service bookings and appointments</p>
             </button>
+            <Link href="/admin/technicians" className="p-6 border-2 border-gray-200 rounded-lg hover:border-primary-500 hover:shadow-lg transition text-left block">
+              <UserCog className="w-8 h-8 text-primary-600 mb-3" />
+              <h3 className="font-bold text-lg mb-2">Manage Technicians</h3>
+              <p className="text-gray-600 text-sm">Add and manage service technicians</p>
+            </Link>
           </div>
         </div>
 

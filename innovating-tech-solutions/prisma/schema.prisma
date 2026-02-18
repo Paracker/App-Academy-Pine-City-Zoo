@@ -19,9 +19,10 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  orders    Order[]
-  bookings  Booking[]
-  reviews   Review[]
+  orders      Order[]
+  bookings    Booking[]
+  reviews     Review[]
+  technician  Technician?
 }
 
 enum UserRole {
@@ -79,17 +80,21 @@ model Booking {
   id              String        @id @default(cuid())
   userId          String
   serviceId       String
+  technicianId    String?
   scheduledDate   DateTime
   location        String?
   address         String?
   notes           String?
   status          BookingStatus @default(PENDING)
   totalPrice      Float
+  completedAt     DateTime?
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
 
   user            User          @relation(fields: [userId], references: [id])
   service         Service       @relation(fields: [serviceId], references: [id])
+  technician      Technician?   @relation(fields: [technicianId], references: [id])
+  statusHistory   BookingStatusHistory[]
 }
 
 enum BookingStatus {
@@ -205,6 +210,72 @@ enum NotificationType {
   ORDER_STATUS_UPDATE
   BOOKING_CONFIRMATION
   BOOKING_REMINDER
+  BOOKING_ASSIGNED
+  BOOKING_STATUS_UPDATE
   LOW_STOCK_ALERT
   REVIEW_REQUEST
+}
+
+model Technician {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  phone           String?
+  bio             String?
+  specialization  String[] // e.g., ["Cellphone Repair", "Computer Maintenance", "CCTV Installation"]
+  certifications  String[] // e.g., ["Apple Certified", "CompTIA A+"]
+  rating          Float    @default(0)
+  totalJobs       Int      @default(0)
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id])
+  skills          TechnicianSkill[]
+  availability    TechnicianAvailability[]
+  bookings        Booking[]
+}
+
+model TechnicianSkill {
+  id            String     @id @default(cuid())
+  technicianId  String
+  skillName     String     // e.g., "iPhone Screen Repair", "Laptop Diagnostics"
+  proficiency   Proficiency @default(INTERMEDIATE)
+  yearsExp      Int        @default(0)
+  createdAt     DateTime   @default(now())
+
+  technician    Technician @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+
+  @@unique([technicianId, skillName])
+}
+
+enum Proficiency {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+model TechnicianAvailability {
+  id            String     @id @default(cuid())
+  technicianId  String
+  dayOfWeek     Int        // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  startTime     String     // e.g., "09:00"
+  endTime       String     // e.g., "17:00"
+  available     Boolean    @default(true)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  technician    Technician @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+
+  @@unique([technicianId, dayOfWeek])
+}
+
+model BookingStatusHistory {
+  id        String        @id @default(cuid())
+  bookingId String
+  status    BookingStatus
+  notes     String?
+  createdAt DateTime      @default(now())
+
+  booking   Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
 }
