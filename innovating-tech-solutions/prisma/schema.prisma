@@ -1,0 +1,281 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  password  String
+  role      UserRole @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  orders      Order[]
+  bookings    Booking[]
+  reviews     Review[]
+  technician  Technician?
+}
+
+enum UserRole {
+  CUSTOMER
+  ADMIN
+  TECHNICIAN
+}
+
+model Category {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  products    Product[]
+}
+
+model Product {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  price       Float
+  stock       Int      @default(0)
+  lowStockThreshold Int @default(10)
+  images      String[]
+  categoryId  String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  category    Category    @relation(fields: [categoryId], references: [id])
+  orderItems  OrderItem[]
+  reviews     Review[]
+  stockHistory StockHistory[]
+}
+
+model Service {
+  id          String   @id @default(cuid())
+  name        String
+  slug        String   @unique
+  description String?
+  basePrice   Float
+  duration    Int      // in minutes
+  callOut     Boolean  @default(false)
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  bookings    Booking[]
+}
+
+model Booking {
+  id              String        @id @default(cuid())
+  userId          String
+  serviceId       String
+  technicianId    String?
+  scheduledDate   DateTime
+  location        String?
+  address         String?
+  notes           String?
+  status          BookingStatus @default(PENDING)
+  totalPrice      Float
+  completedAt     DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  user            User          @relation(fields: [userId], references: [id])
+  service         Service       @relation(fields: [serviceId], references: [id])
+  technician      Technician?   @relation(fields: [technicianId], references: [id])
+  statusHistory   BookingStatusHistory[]
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model Order {
+  id              String        @id @default(cuid())
+  userId          String
+  orderNumber     String        @unique
+  status          OrderStatus   @default(PENDING)
+  paymentMethod   PaymentMethod
+  paymentStatus   PaymentStatus @default(PENDING)
+  subtotal        Float
+  tax             Float         @default(0)
+  total           Float
+  shippingAddress String?
+  notes           String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  user            User          @relation(fields: [userId], references: [id])
+  items           OrderItem[]
+  statusHistory   OrderStatusHistory[]
+}
+
+enum OrderStatus {
+  PENDING
+  CONFIRMED
+  PROCESSING
+  SHIPPED
+  DELIVERED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CARD
+  CASH_ON_DELIVERY
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  FAILED
+  REFUNDED
+}
+
+model OrderItem {
+  id        String   @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int
+  price     Float
+  createdAt DateTime @default(now())
+
+  order     Order    @relation(fields: [orderId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  userId    String
+  productId String
+  rating    Int      // 1-5 stars
+  comment   String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User     @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@unique([userId, productId]) // One review per user per product
+}
+
+model StockHistory {
+  id          String   @id @default(cuid())
+  productId   String
+  quantity    Int      // Positive for additions, negative for reductions
+  reason      String   // e.g., "Order", "Restock", "Adjustment"
+  reference   String?  // Order ID or other reference
+  createdAt   DateTime @default(now())
+
+  product     Product  @relation(fields: [productId], references: [id])
+}
+
+model OrderStatusHistory {
+  id        String      @id @default(cuid())
+  orderId   String
+  status    OrderStatus
+  notes     String?
+  createdAt DateTime    @default(now())
+
+  order     Order       @relation(fields: [orderId], references: [id])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String
+  type      NotificationType
+  title     String
+  message   String
+  read      Boolean  @default(false)
+  link      String?
+  createdAt DateTime @default(now())
+}
+
+enum NotificationType {
+  ORDER_CONFIRMATION
+  ORDER_STATUS_UPDATE
+  BOOKING_CONFIRMATION
+  BOOKING_REMINDER
+  BOOKING_ASSIGNED
+  BOOKING_STATUS_UPDATE
+  LOW_STOCK_ALERT
+  REVIEW_REQUEST
+}
+
+model Technician {
+  id              String   @id @default(cuid())
+  userId          String   @unique
+  phone           String?
+  bio             String?
+  specialization  String[] // e.g., ["Cellphone Repair", "Computer Maintenance", "CCTV Installation"]
+  certifications  String[] // e.g., ["Apple Certified", "CompTIA A+"]
+  rating          Float    @default(0)
+  totalJobs       Int      @default(0)
+  active          Boolean  @default(true)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  user            User     @relation(fields: [userId], references: [id])
+  skills          TechnicianSkill[]
+  availability    TechnicianAvailability[]
+  bookings        Booking[]
+}
+
+model TechnicianSkill {
+  id            String     @id @default(cuid())
+  technicianId  String
+  skillName     String     // e.g., "iPhone Screen Repair", "Laptop Diagnostics"
+  proficiency   Proficiency @default(INTERMEDIATE)
+  yearsExp      Int        @default(0)
+  createdAt     DateTime   @default(now())
+
+  technician    Technician @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+
+  @@unique([technicianId, skillName])
+}
+
+enum Proficiency {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+model TechnicianAvailability {
+  id            String     @id @default(cuid())
+  technicianId  String
+  dayOfWeek     Int        // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+  startTime     String     // e.g., "09:00"
+  endTime       String     // e.g., "17:00"
+  available     Boolean    @default(true)
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  technician    Technician @relation(fields: [technicianId], references: [id], onDelete: Cascade)
+
+  @@unique([technicianId, dayOfWeek])
+}
+
+model BookingStatusHistory {
+  id        String        @id @default(cuid())
+  bookingId String
+  status    BookingStatus
+  notes     String?
+  createdAt DateTime      @default(now())
+
+  booking   Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+}
