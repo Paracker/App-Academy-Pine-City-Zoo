@@ -1,0 +1,124 @@
+/* Student Dashboard Styles - Child-Friendly Design */
+
+.welcome-section {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 40px 20px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 20px;
+    color: white;
+}
+
+.welcome-section h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.welcome-section p {
+    font-size: 1.25rem;
+    opacity: 0.9;
+}
+
+/* Activity Cards - Extra Large for Young Children */
+.activity-card {
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.activity-card:active {
+    transform: scale(0.95);
+}
+
+/* Recent Activities List */
+.recent-activities-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.recent-activity-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: #f7fafc;
+    border-radius: 12px;
+    transition: background 0.3s;
+}
+
+.recent-activity-item:hover {
+    background: #edf2f7;
+}
+
+.recent-activity-icon {
+    font-size: 32px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 12px;
+}
+
+.recent-activity-info {
+    flex: 1;
+}
+
+.recent-activity-title {
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 4px;
+}
+
+.recent-activity-time {
+    font-size: 14px;
+    color: #718096;
+}
+
+.recent-activity-score {
+    font-size: 20px;
+    font-weight: bold;
+    color: #48bb78;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .welcome-section h1 {
+        font-size: 1.75rem;
+    }
+    
+    .welcome-section p {
+        font-size: 1rem;
+    }
+    
+    .activity-card {
+        min-height: 240px;
+    }
+    
+    .activity-icon {
+        font-size: 60px;
+    }
+    
+    .activity-title {
+        font-size: 20px;
+    }
+}
+
+/* Animations for child engagement */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.activity-card:hover .activity-icon {
+    animation: bounce 0.6s ease;
+}
+

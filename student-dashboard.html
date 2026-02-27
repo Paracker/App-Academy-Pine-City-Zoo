@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Learning - Grade R</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/student-dashboard.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">
+                <span>🎓</span>
+                <span id="studentName">My Learning</span>
+            </div>
+            <div class="navbar-menu">
+                <a href="student-dashboard.html" class="navbar-link">🏠 Home</a>
+                <button onclick="logout()" class="btn btn-sm btn-outline" style="color: white; border-color: white;">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container" style="padding: 40px 20px;">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1>Welcome back, <span id="welcomeName">Student</span>! 👋</h1>
+            <p>What would you like to learn today?</p>
+        </div>
+
+        <!-- Activities Grid -->
+        <div class="grid grid-3" id="activitiesGrid">
+            <!-- Puzzles -->
+            <div class="activity-card" onclick="goToActivity('puzzles')" style="--activity-color: #ed8936;">
+                <span class="activity-icon">🧩</span>
+                <h3 class="activity-title">Puzzles</h3>
+                <p class="activity-description">Solve fun puzzles!</p>
+                <div class="activity-progress">
+                    <div class="activity-progress-bar" id="puzzleProgress" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Coloring -->
+            <div class="activity-card" onclick="goToActivity('coloring')" style="--activity-color: #f687b3;">
+                <span class="activity-icon">🎨</span>
+                <h3 class="activity-title">Coloring</h3>
+                <p class="activity-description">Color beautiful pictures!</p>
+                <div class="activity-progress">
+                    <div class="activity-progress-bar" id="coloringProgress" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Code Art -->
+            <div class="activity-card" onclick="goToActivity('code-art')" style="--activity-color: #667eea;">
+                <span class="activity-icon">💻</span>
+                <h3 class="activity-title">Code Art</h3>
+                <p class="activity-description">Learn coding by drawing!</p>
+                <span class="badge badge-new">New!</span>
+                <div class="activity-progress">
+                    <div class="activity-progress-bar" id="codeArtProgress" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Mathematics -->
+            <div class="activity-card" onclick="goToActivity('mathematics')" style="--activity-color: #4299e1;">
+                <span class="activity-icon">➕</span>
+                <h3 class="activity-title">Math</h3>
+                <p class="activity-description">Learn numbers and counting!</p>
+                <div class="activity-progress">
+                    <div class="activity-progress-bar" id="mathProgress" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Science -->
+            <div class="activity-card" onclick="goToActivity('science')" style="--activity-color: #48bb78;">
+                <span class="activity-icon">🔬</span>
+                <h3 class="activity-title">Science</h3>
+                <p class="activity-description">Explore the world!</p>
+                <div class="activity-progress">
+                    <div class="activity-progress-bar" id="scienceProgress" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Assignments -->
+            <div class="activity-card" onclick="goToActivity('assignments')" style="--activity-color: #9f7aea;">
+                <span class="activity-icon">📝</span>
+                <h3 class="activity-title">Assignments</h3>
+                <p class="activity-description">Complete your tasks!</p>
+                <span class="badge badge-new" id="assignmentBadge" style="display: none;">New</span>
+                <div class="activity-progress">
+                    <div class="activity-progress-bar" id="assignmentProgress" style="width: 0%"></div>
+                </div>
+            </div>
+
+            <!-- Tests -->
+            <div class="activity-card" onclick="goToActivity('tests')" style="--activity-color: #ed64a6;">
+                <span class="activity-icon">✅</span>
+                <h3 class="activity-title">Tests</h3>
+                <p class="activity-description">Show what you know!</p>
+                <div class="activity-progress">
+                    <div class="activity-progress-bar" id="testProgress" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Activity Section -->
+        <div class="recent-section" style="margin-top: 40px;">
+            <h2>Recent Activities 📚</h2>
+            <div class="card">
+                <div id="recentActivities">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <div class="empty-state-title">No recent activities</div>
+                        <div class="empty-state-description">Start learning by clicking on an activity above!</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+    
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/auth-guard.js"></script>
+    <script src="js/student-dashboard.js"></script>
+</body>
+</html>

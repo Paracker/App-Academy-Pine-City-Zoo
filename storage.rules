@@ -1,0 +1,72 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    // Helper function to check if user is authenticated
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    
+    // Helper function to get user data from Firestore
+    function getUserData() {
+      return firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data;
+    }
+    
+    function isStudent() {
+      return isSignedIn() && getUserData().role == 'student';
+    }
+    
+    function isTeacher() {
+      return isSignedIn() && getUserData().role == 'teacher';
+    }
+    
+    // Student submissions (coloring, assignments, etc.)
+    match /submissions/{studentId}/{fileName} {
+      // Students can upload their own submissions
+      allow write: if isStudent() && request.auth.uid == studentId;
+      
+      // Students can read their own submissions
+      allow read: if isStudent() && request.auth.uid == studentId;
+      
+      // Teachers can read all submissions
+      allow read: if isTeacher();
+    }
+    
+    // Activity content (templates, images, etc.)
+    match /activities/{activityType}/{fileName} {
+      // Everyone can read activity content
+      allow read: if isSignedIn();
+      
+      // Only teachers can upload activity content
+      allow write: if isTeacher();
+    }
+    
+    // User profile pictures
+    match /profiles/{userId}/{fileName} {
+      // Users can upload their own profile picture
+      allow write: if isSignedIn() && request.auth.uid == userId;
+      
+      // Everyone can read profile pictures
+      allow read: if isSignedIn();
+    }
+    
+    // Coloring templates
+    match /coloring-templates/{fileName} {
+      // Everyone can read templates
+      allow read: if isSignedIn();
+      
+      // Only teachers can upload templates
+      allow write: if isTeacher();
+    }
+    
+    // Puzzle images
+    match /puzzles/{fileName} {
+      // Everyone can read puzzle images
+      allow read: if isSignedIn();
+      
+      // Only teachers can upload puzzle images
+      allow write: if isTeacher();
+    }
+  }
+}
+

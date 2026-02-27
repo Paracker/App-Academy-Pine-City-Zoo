@@ -1,23 +1,50 @@
 <!DOCTYPE html>
-<html>
-      <head>
-            <link rel="stylesheet" href="style.css">
-      </head>
-      <body>
-            <div id="header">
-                  <a href="index.html"><img src="images/logo.png">
-            </div>
-            <div id="tabs-top">
-                  <a href="Animal.html">ANIMALS</a>
-                  <a href="map.html">MAP</a>
-                  <a href="places.html">PLACES</a>
-            </div>
-            <div id="main-home-page">
-                  <img src="images/welcome photo.png" width="100%">
-            </div>
-            <div id="tabs-bottom">
-                   <a href="weather.html">WEATHER</a>
-                   <a href="feedback.html">FEEDBACK</a>
-            </div>
-      </body>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Grade R Learning Platform</title>
+    <meta http-equiv="refresh" content="0; url=login.html">
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: Arial, sans-serif;
+            color: white;
+            margin: 0;
+        }
+        .redirect-message {
+            text-align: center;
+        }
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        a {
+            color: white;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="redirect-message">
+        <div class="spinner"></div>
+        <h2>🎓 Grade R Learning Platform</h2>
+        <p>Redirecting to login...</p>
+        <p>If you are not redirected, <a href="login.html">click here</a>.</p>
+    </div>
+</body>
 </html>
+

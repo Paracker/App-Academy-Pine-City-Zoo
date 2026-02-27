@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher Dashboard - Grade R Learning</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="navbar-content">
+            <div class="navbar-brand">
+                <span>🎓</span>
+                <span>Teacher Dashboard</span>
+            </div>
+            <div class="navbar-menu">
+                <span id="teacherName" style="margin-right: 16px;">Teacher</span>
+                <button onclick="logout()" class="btn btn-sm btn-outline" style="color: white; border-color: white;">
+                    Logout
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container" style="padding: 40px 20px;">
+        <h1>Welcome, Teacher! 👨‍🏫</h1>
+        
+        <!-- Quick Stats -->
+        <div class="grid grid-4" style="margin-bottom: 40px;">
+            <div class="stats-card">
+                <div class="stats-value" id="totalStudents">0</div>
+                <div class="stats-label">Total Students</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-value" id="activeAssignments">0</div>
+                <div class="stats-label">Active Assignments</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-value" id="pendingGrading">0</div>
+                <div class="stats-label">Pending Grading</div>
+            </div>
+            <div class="stats-card">
+                <div class="stats-value" id="avgCompletion">0%</div>
+                <div class="stats-label">Avg Completion</div>
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('overview')">Overview</button>
+            <button class="tab" onclick="switchTab('students')">Students</button>
+            <button class="tab" onclick="switchTab('activities')">Activities</button>
+            <button class="tab" onclick="switchTab('grading')">Grading</button>
+        </div>
+
+        <!-- Tab Content -->
+        <div id="tabContent">
+            <div class="empty-state">
+                <div class="empty-state-icon">🚧</div>
+                <div class="empty-state-title">Teacher Dashboard Coming Soon</div>
+                <div class="empty-state-description">
+                    This feature is currently under development. You'll be able to manage students, 
+                    create activities, and grade assignments here.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    
+    <!-- Firebase Config -->
+    <script src="firebase-config.js"></script>
+    
+    <!-- Scripts -->
+    <script src="js/utils.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/auth-guard.js"></script>
+    <script src="js/teacher-dashboard.js"></script>
+</body>
+</html>
